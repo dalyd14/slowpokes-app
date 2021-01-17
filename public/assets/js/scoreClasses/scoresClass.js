@@ -4,9 +4,22 @@ function weekDetails(type, year, week) {
     this.weekNum = week;
 }
 
-const filterForScores = results => {
-    //filter out all games that are canceled
-    let games = results.events.filter(game => game.status.type.id !== '5')
+const filterForScores = (results) => {
+    //status schedule = 1
+    //status inProgress = 2
+    //status final = 3
+    //status postponed = 4
+    //status canceled = 5
+    let games = {
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: []
+    }
+    Object.keys(games).forEach(key => {
+        games[key] = results.events.filter(game => game.status.type.id === key.toString());
+    })
     return games
 }
 
@@ -26,8 +39,8 @@ if(window.location.href.indexOf("/scores") > -1) {
 }
 
 var queryStrings = {
-    nfl: 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
-    ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard'
+    nfl: 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=900 ',
+    ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900 '
 }
 
 const getScores = query => {
@@ -52,16 +65,16 @@ switch (pathLoc) {
     case 'all':
         Object.keys(queryStrings).forEach(key => {
             getScores(queryStrings[key])
-            .then(scores => displayResults(key, scores))
+            .then(scores => displayResults(key, filterForScores(scores)))
         })
         break;
     case 'nfl':
         getScores(queryStrings.nfl)
-        .then(resp => results.nfl = resp)
+        .then(scores => displayResults("nfl", filterForScores(scores)))
         break;
     case 'ncaaf':
         getScores(queryStrings.ncaaf)
-        .then(resp => results.ncaaf = resp)
+        .then(scores => displayResults("ncaaf", filterForScores(scores)))
         break;
     case 'nba':
 
