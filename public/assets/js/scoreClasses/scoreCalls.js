@@ -22,30 +22,27 @@ var queryStrings = {
     ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900 '
 }
 
+const callPromise = queryArr => {
+    Promise.all(getScores(queryArr)).then(values => {
+        console.log(values)
+    })
+}
+
 switch (pathLoc) {
     case 'all':
-        Object.keys(queryStrings).forEach(key => {
-            getScores(queryStrings[key])
-            .then(scores => displayResults(key, prepareScores(scores)))
-        })
+        callPromise(Object.keys(queryStrings))
         break;
     case 'football':
-        ['nfl', 'ncaaf'].forEach(sport => {
-            getScores(queryStrings[sport])
-            .then(scores => displayResults(sport, prepareScores(scores)))            
-        })
+        callPromise(['nfl', 'ncaaf'])
         break;
     case 'basketball':
-        getScores(queryStrings.ncaaf)
-        .then(scores => displayResults("ncaaf", prepareScores(scores)))
+        callPromise(['nba', 'ncaab'])
         break;
     case 'nfl':
-        getScores(queryStrings.nfl)
-        .then(scores => displayResults("nfl", prepareScores(scores)))
+        callPromise(queryStrings.nfl)
         break;
     case 'ncaaf':
-        getScores(queryStrings.ncaaf)
-        .then(scores => displayResults("ncaaf", prepareScores(scores)))
+        callPromise(queryStrings.ncaaf)
         break;
     case 'nba':
 

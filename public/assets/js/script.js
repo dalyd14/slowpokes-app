@@ -3,7 +3,7 @@ $(".toolbar-display-btn").click(function() {
 })
 
 $(".toolbar").on("click", ".toolbar-btn", function() {
-    window.location.href = '/scores'
+    window.location.href = '/' + $(this).attr('id')
 })
 $(".sport-btn").click(function() {
     var sport = $(this).attr('id')
