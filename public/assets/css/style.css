@@ -40,6 +40,9 @@ nav {
     align-items: center;
     color: white;
 }
+.toolbar-btn:active {
+    color: var(--app-gray);
+}
 .toolbar-btn span {
     font-size: 2.5rem;
 }
