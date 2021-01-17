@@ -1,15 +1,3 @@
-function weekDetails(type, year, week) {
-    this.seasonType = type;
-    this.seasonYear = year;
-    this.weekNum = week;
-}
-
-function scoreObj(sport, league, scores) {
-    this.sport = sport;
-    this.league = league;
-    this.scores = scores
-}
-
 const getRealDates = scores => {
     scores.forEach(score => {
         score.dateTime = moment.utc(score.date, "YYYY-MM-DDTH:mmZ").local().format('MMMM Do YYYY, h:mm a')
@@ -52,7 +40,7 @@ const filterForScores = (scores) => {
         5: []
     }
     Object.keys(games).forEach(key => {
-        games[key] = scores.filter(game => game.status.type.id === key.toString());
+        games[key] = scores.filter(game => game.status.type.id[0] === key.toString()[0])
     })
     return games
 }
@@ -68,7 +56,6 @@ const sortScore = (scores, sortType = 'oldFirst') => {
             scores[key] = scores[key].sort((a, b) => (moment.utc(b.date, "YYYY-MM-DDTH:mmZ") - moment.utc(a.date, "YYYY-MM-DDTH:mmZ")))
         }
     })
-
     return scores
 }
 

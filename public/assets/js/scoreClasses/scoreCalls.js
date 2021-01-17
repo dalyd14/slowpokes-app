@@ -24,7 +24,7 @@ var queryStrings = {
 
 const callPromise = queryArr => {
     Promise.all(getScores(queryArr)).then(values => {
-        console.log(values)
+        displayResults(values)
     })
 }
 
@@ -39,10 +39,10 @@ switch (pathLoc) {
         callPromise(['nba', 'ncaab'])
         break;
     case 'nfl':
-        callPromise(queryStrings.nfl)
+        callPromise('nfl')
         break;
     case 'ncaaf':
-        callPromise(queryStrings.ncaaf)
+        callPromise('ncaaf')
         break;
     case 'nba':
 
