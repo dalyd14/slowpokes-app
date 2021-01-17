@@ -48,8 +48,21 @@ class gameClass {
     getHomeLogo() {
         return this.homeTeam.team.logo
     }
-    getQuarter() {
-        return this.gameDetails.status.period
+    getQuarterStatus() {
+        switch (parseInt(this.gameDetails.status.type.id)) {
+            case 1:
+                return 'SCHED'
+            case 2:
+                return this.gameDetails.status.type.shortDetail.split(' - ')[1]
+            case 3:
+                return 'FINAL'
+            case 4:
+                return 'POST'
+            case 5:
+                return 'CANC'
+            default:
+                break;
+        }        
     }
     getTimeLeft() {
         return this.gameDetails.status.displayClock

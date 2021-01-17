@@ -53,9 +53,54 @@ const displaySectionSubSubtitle = () => {
 }
 
 const displayGame = (game) => {
+    console.log(game)
+    const thisGame = new gameClass(
+        game.competitions[0].competitors[0],
+        game.competitions[0].competitors[1],
+        game.competitions[0].status,
+        game.dateTime
+    )
     pageHtml += `
     <div class="section-game">
-        <p>${game.name}</p>
+        <div class="row score-row">
+            <div class="col-10">
+                <div class="row no-gutters team-info-row">
+                    <div class="col-2 img-container">
+                        <img class="score-team-img" src="${thisGame.getAwayLogo()}">
+                    </div>
+                    <div class="col-8 team-name-container">
+                        <h5 class="team-name">${thisGame.getAwayDetails().teamName}</h5>
+                    </div>
+                    <div class="col-2 team-score-container">
+                        <h5 class="score">${thisGame.getAwayScore()}</h5>
+                    </div>
+                </div>
+                <div class="row no-gutters team-info-row">
+                    <div class="col-2 img-container">
+                        <img class="score-team-img" src="${thisGame.getHomeLogo()}">
+                    </div>
+                    <div class="col-8 team-name-container">
+                        <h5 class="team-name">${thisGame.getHomeAwayDetails().teamName}</h5>
+                    </div>
+                    <div class="col-2 team-score-container">
+                        <h5 class="score">${thisGame.getHomeScore()}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2 d-flex justify-content-center game-info-row">
+                <div class="row no-gutters">
+                    <div class="col-12 quarter-container">
+                        <h5 class="quarter">3rd Qtr</h5>
+                    </div>
+                    <div class="col-12 time-container">
+                        <h5 class="time">4:24</h5>
+                    </div>
+                    <div class="col-12 network-container">
+                        <h6 class="network">CBS</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>`
 }
 

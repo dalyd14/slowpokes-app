@@ -1,0 +1,49 @@
+/* Scores Section */
+.row {
+    margin: 0
+}
+.game-info-row {
+    display: flex;
+    justify-content: space-between;
+}
+.img-container {
+    text-align: center;
+}
+.score-team-img {
+    width: 35px;
+}
+.score-row {
+    border-bottom: 1px solid lightgray;
+    padding: 3px;
+}
+.score-row>div {
+    padding: 0;
+}
+.team-name, .team-rank, .score {
+    font-size: 15px;
+    margin: 0;
+}
+.lost {
+    color: gray
+}
+.team-info-row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.score-row p {
+    font-size: 12px;
+}
+.quarter, .time, .network {
+    font-size: 13px;
+    margin: 0;
+    text-align: center;
+}
+.quarter-container, .time-container, .network-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.game-info-row {
+    border-left: 1px solid lightgray;
+}
