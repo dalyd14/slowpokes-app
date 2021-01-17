@@ -1,3 +1,13 @@
+:root {
+    --app-dark: #424C58;
+    --app-darker: #2A2D33;
+    --app-gray: #AFB7C2;
+    --app-lightgray: #FBFAFF;
+    --app-blue: #15BDD8;
+    --app-green:  #31C5B1;
+    --app-orange: #F68E4F;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,8 +15,6 @@
     background: transparent;
 }
 body {
-    background-color: #d9d9d9;
-    background-image: linear-gradient(315deg, #d9d9d9 0%, #f6f2f2 74%);
     min-height: 100vh;
 }
 .toolbar-btn, .toolbar-display-btn, .sport-btn {
@@ -22,20 +30,22 @@ nav {
     top: 0;
 }
 .toolbar {
-    background-color: white;
+    background-color: var(--app-dark);
     border-radius: 10px;
     height: 50px;
-    width: 90%;
+    width: 96%;
 }
 .toolbar-btn {
     display: flex;
     align-items: center;
+    color: white;
 }
 .toolbar-btn span {
     font-size: 2.5rem;
 }
 .toolbar-display-btn {
-    background-color: white;
+    background-color: var(--app-dark);
+    color: white;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -61,11 +71,27 @@ h1 {
 h2 {
     padding: 30px;
 }
+.sport-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .sports-btns span {
     font-size: 8rem;
+    color: white;
 }
-.sport-btn {
-    border: 1px solid lightgray;
-    border-radius: 25px;
-    background-color: white;
+.sports-btns span:active {
+    color: var(--app-gray);
+}
+#sports_football {
+    background-color: var(--app-green);
+}
+#sports_football:active {
+    background-color: #28a695;
+}
+#sports_basketball {
+    background-color: var(--app-orange);
+}
+#sports_basketball:active {
+    background-color: #ba6b3c;
 }
