@@ -32,6 +32,18 @@ const callPromise = queryArr => {
     })
 }
 
+const callCustom = query => {
+    return new Promise((res, rej) => {
+        fetch(query).then(ans => {
+            if(ans.ok) {
+                ans.json().then(scores => {
+                    res(scores)
+                })
+            }
+        })        
+    })
+}
+
 switch (pathLoc) {
     case 'all':
         callPromise(Object.keys(queryStrings))

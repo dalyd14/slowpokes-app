@@ -29,7 +29,14 @@
     font-size: .8rem;
 }
 .leagues-btns {
-    margin-top: 30px;
+    margin-top: 70px;
+}
+
+.form-group{
+    margin: .5rem .5rem .5rem 0;
+}
+.scheduleChanger {
+    margin-left: .5rem;
 }
 
 /* Scores Section */

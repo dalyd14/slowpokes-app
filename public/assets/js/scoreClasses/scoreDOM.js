@@ -22,15 +22,62 @@
 //       completed 3
 //       postponed 4
 
-var isLeaguePage = true
-if (!(window.location.href.indexOf("/scores/nfl") > -1) && 
-    !(window.location.href.indexOf("/scores/ncaaf") > -1) && 
-    !(window.location.href.indexOf("/scores/nba") > -1) && 
-    !(window.location.href.indexOf("/scores/ncaab") > -1)) {
-        isLeaguePage = false
+const whatPage = () => {
+    const page = {
+        isLeaguePage: true,
+        whatSport: 'all',
+        whatLeague: 'all'
+    }
+    if (!(window.location.href.indexOf("/scores/nfl") > -1) && 
+        !(window.location.href.indexOf("/scores/ncaaf") > -1) && 
+        !(window.location.href.indexOf("/scores/nba") > -1) && 
+        !(window.location.href.indexOf("/scores/ncaab") > -1)) {
+            page.isLeaguePage = false
+    } else {
+        if (window.location.href.indexOf("nfl") > -1) {
+            page.whatSport = 'football'
+            page.whatLeague = 'nfl'
+        } else if (window.location.href.indexOf("ncaaf") > -1) {
+            page.whatSport = 'football'
+            page.whatLeague = 'ncaaf'
+        } else if (window.location.href.indexOf("nba") > -1) {
+            page.whatSport = 'basketball'
+            page.whatLeague = 'nba'
+        } else if (window.location.href.indexOf("ncaab") > -1) {
+            page.whatSport = 'basketball'
+            page.whatLeague = 'ncaab'
+        }
+    }
+    return page    
 }
 
+var currentPage = whatPage()
+
 var pageHtml = ``
+
+const addFilter = () => {
+    pageHtml += `
+    <form id="scheduleSelector" class="d-flex justify-content-between">
+        <div class="scheduleChanger d-flex">
+            <div class="form-group">
+                <select class="form-control" id="yearSelect">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="weekSelect">
+                </select>
+            </div>
+        </div>
+        </div class="teamFilter">
+            <div class="form-group">
+                <select class="form-control" id="teamSelect">
+                    <option selected value="all">All</option>
+                </select>
+            </div>
+        </div>
+    </form>
+    `
+}
 
 const addSectionUpper = (title) => {
     pageHtml += `
@@ -135,11 +182,11 @@ const displayGameLogic = (league) => {
     var orderKeyArr = ['STATUS_IN_PROGRESS', 'STATUS_SCHEDULED', 'STATUS_FINAL', 'STATUS_POSTPONED', 'STATUS_CANCELED']
     orderKeyArr.forEach(key => {
         if(league.scores[key].length>0 && key!=='STATUS_CANCELED') {
-            if (gameCount < 5 || isLeaguePage) {
+            if (gameCount < 5 || currentPage.isLeaguePage) {
                 addSubtitle(getStatus(key))                
             }
             league.scores[key].forEach(game => {
-                if (gameCount < 5 || isLeaguePage) {
+                if (gameCount < 5 || currentPage.isLeaguePage) {
                     displayGame(game)
                     gameCount++    
                 } else {
@@ -153,6 +200,18 @@ const displayGameLogic = (league) => {
 
 const displayResults = (results) => {
     console.log(results)
+    if(currentPage.isLeaguePage) {
+        if(currentPage.whatSport === 'football') {
+            addFilter()
+            if(currentPage.whatLeague === 'nfl') {
+                populateFootballFilter(queryStrings.nfl)
+            } else if (currentPage.whatLeague === 'ncaaf') {
+                populateFootballFilter(queryStrings.ncaaf)
+            }
+        } else if (currentPage.whatSport === 'basketball') {
+
+        }
+    }
     if(results.some(entry => entry.sport === 'football')) {
         if(results.some(entry => entry.league === 'nfl')){
             addSectionUpper('nfl')
@@ -168,7 +227,8 @@ const displayResults = (results) => {
                 addLower(isMore, 'ncaaf')
             })
         }
-    } else if(results.some(entry => entry.sport === 'basketball')) {
+    } 
+    if(results.some(entry => entry.sport === 'basketball')) {
         if(results.some(entry => entry.league === 'nba')){
             addSectionUpper('nba')
             results.filter(result => result.league === 'nba').forEach(league => {
