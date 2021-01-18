@@ -107,7 +107,9 @@ const displayGame = (game) => {
 const addLower = (isMore, league) => {
     if(isMore) {
         pageHtml += `
-        <a href="/scores/${league}">Show more games</a>`
+        <div class="showMoreGamesBtn d-flex justify-content-center align-items-center my-2">
+            <a class="badge badge-pill" href="/scores/${league}"><i class="plus icon"></i> Show more ${league.toUpperCase()} games</a>
+        </div>`
     }
     pageHtml += `
     </section>`

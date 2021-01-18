@@ -1,3 +1,29 @@
+:root {
+    --app-less-dark: #6D7F96;
+    --app-dark: #424C58;
+    --app-darker: #2A2D33;
+    --app-gray: #AFB7C2;
+    --app-gray-font: #B3B8BC;
+    --app-lightgray: #FBFAFF;
+    --app-blue: #15BDD8;
+    --app-green:  #31C5B1;
+    --app-orange: #F68E4F;
+}
+
+.section-title h3 {
+    padding: 10px;
+    background-color: var(--app-blue);
+    color: white;
+}
+.section-subtitle h5 {
+    padding: 3px 15px;
+    color: var(--app-gray);
+}
+.badge-pill {
+    background-color: var(--app-green);
+    color: white;
+}
+
 /* Scores Section */
 .row {
     margin: 0
