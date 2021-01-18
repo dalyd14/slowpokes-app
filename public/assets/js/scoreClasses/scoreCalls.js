@@ -26,8 +26,8 @@ var queryStrings = {
     ncaab: 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
 }
 
-const callPromise = queryArr => {
-    Promise.all(getScores(queryArr)).then(values => {
+const callPromise = queryObj => {
+    Promise.all(getScores(queryObj)).then(values => {
         displayResults(values)
     })
 }
@@ -46,15 +46,15 @@ const callCustom = query => {
 
 switch (pathLoc) {
     case 'all':
-        callPromise(Object.keys(queryStrings))
+        callPromise(queryStrings)
         break;
     case 'football':
-        callPromise(['nfl', 'ncaaf'])
+        callPromise({nfl: queryStrings.nfl, ncaaf: queryStrings.ncaaf})
         break;
     case 'basketball':
-        callPromise(['nba', 'ncaab'])
+        callPromise({nfl: queryStrings.nba, ncaaf: queryStrings.ncaab})
         break;
     default:
-        callPromise(pathLoc)
+        callPromise({[pathLoc]: queryStrings[pathLoc]})
         break;
 }

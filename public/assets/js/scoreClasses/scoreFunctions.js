@@ -5,20 +5,20 @@ const getRealDates = scores => {
     return scores
 }
 
-const typeScores = (sport, games) => {
+const typeScores = (league, games) => {
     let scores = ''
-    switch (sport) {
+    switch (league) {
         case 'nfl':
-            scores = new scoreObj('football', sport, games)
+            scores = new scoreObj('football', league, games)
             break;
         case 'ncaaf':
-            scores = new scoreObj('football', sport, games)
+            scores = new scoreObj('football', league, games)
             break;
         case 'nba':
-            scores = new scoreObj('basketball', sport, games)
+            scores = new scoreObj('basketball', league, games)
             break;
         case 'ncaab':
-            scores = new scoreObj('basketball', sport, games)
+            scores = new scoreObj('basketball', league, games)
             break;
         default:
             break;
@@ -66,21 +66,19 @@ const sortScore = (scores, sortType = 'oldFirst') => {
     return scores
 }
 
-const prepareScores = (sport, scores) => {
+const prepareScores = (league, scores) => {
     scores = getRealDates(scores.events)
-    scores = typeScores(sport, scores)
+    scores = typeScores(league, scores)
     scores.scores = filterForScores(scores.scores)
     scores.scores = sortScore(scores.scores)
     return scores
 }
 
-const getScores = querys => {
-    if (!Array.isArray(querys)) {
-        querys = [querys]
-    }
-    return querys.map(key => {
+const getScores = (querys) => {
+    var keyArr = Object.keys(querys)
+    return keyArr.map(key => {
         return new Promise((res, rej) => {
-            fetch(queryStrings[key])
+            fetch(querys[key])
             .then(resp => {
                 if (resp.ok) {
                     resp.json()

@@ -1,12 +1,14 @@
-const populateFootballFilter = (query) => {
+const populateFootballFilter = (query, league) => {
     callCustom(query).then(res => {
         var results = getFootballOptions(res)
         $('#scheduleSelector #yearSelect').html(results.yearHtml)   
-        $('#scheduleSelector #weekSelect').html(results.weekHtml)        
+        $('#scheduleSelector #weekSelect').html(results.weekHtml)
+        $('#scheduleSelector').data('league', league)
     })
 }
 
 const getFootballOptions = (currentScores) => {
+    console.log(currentScores)
     var curYearValue = currentScores.season.year
     var curSeasonType = currentScores.season.type
     var curWeek = currentScores.week.number
@@ -52,7 +54,14 @@ const makeOptionHtmls = (weekOptions, yearOptions, curWeek, curYear) => {
             <option value="${week.value}">${week.display}</option>`            
         }
     })
-
     return { yearHtml, weekHtml }
-
 }
+
+$('#filters').on('change', '#scheduleSelector', function() {
+    var filterYear = $(this).find('#yearSelect').val()
+    var filterSeasonType = $(this).find('#weekSelect').val().split(":")[0]
+    var filterWeek = $(this).find('#weekSelect').val().split(":")[1]
+    var league = $(this).data('league')
+    var customQuery = queryStrings[league] + `&dates=${filterYear}&seasontype=${filterSeasonType}&week=${filterWeek}`
+    callPromise({[league]: customQuery})
+})

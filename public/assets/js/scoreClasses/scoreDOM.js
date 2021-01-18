@@ -54,10 +54,11 @@ const whatPage = () => {
 var currentPage = whatPage()
 
 var pageHtml = ``
+var searchHtml = ``
 
-const addFilter = () => {
-    pageHtml += `
-    <form id="scheduleSelector" class="d-flex justify-content-between">
+const addFootballFilter = () => {
+    searchHtml += `
+    <form id="scheduleSelector" data-league="${currentPage.whatLeague}" class="d-flex justify-content-between">
         <div class="scheduleChanger d-flex">
             <div class="form-group">
                 <select class="form-control" id="yearSelect">
@@ -199,14 +200,16 @@ const displayGameLogic = (league) => {
 }
 
 const displayResults = (results) => {
+    pageHtml = ``
+    searchHtml = ``
     console.log(results)
     if(currentPage.isLeaguePage) {
         if(currentPage.whatSport === 'football') {
-            addFilter()
+            addFootballFilter()
             if(currentPage.whatLeague === 'nfl') {
-                populateFootballFilter(queryStrings.nfl)
+                populateFootballFilter(queryStrings.nfl, currentPage.whatLeague)
             } else if (currentPage.whatLeague === 'ncaaf') {
-                populateFootballFilter(queryStrings.ncaaf)
+                populateFootballFilter(queryStrings.ncaaf, currentPage.whatLeague)
             }
         } else if (currentPage.whatSport === 'basketball') {
 
@@ -244,5 +247,6 @@ const displayResults = (results) => {
             })
         }
     }
+    $('#filters').html(searchHtml)
     $('#score-results').html(pageHtml)
 }
