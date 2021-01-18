@@ -1,7 +1,9 @@
 :root {
+    --app-less-dark: #6D7F96;
     --app-dark: #424C58;
     --app-darker: #2A2D33;
     --app-gray: #AFB7C2;
+    --app-gray-font: #B3B8BC;
     --app-lightgray: #FBFAFF;
     --app-blue: #15BDD8;
     --app-green:  #31C5B1;
@@ -78,9 +80,11 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    flex: 1;
 }
 .sports-btns span {
-    font-size: 8rem;
+    font-size: 7rem;
     color: white;
 }
 .sports-btns span:active {
@@ -97,4 +101,31 @@ h2 {
 }
 #sports_basketball:active {
     background-color: #ba6b3c;
+}
+#sports_favorites {
+    background-color: #ffd60a;
+}
+#sports_favorites:active {
+    background-color: #ddba0b;
+}
+.league-btn {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--app-gray-font);
+}
+.league-btn:last-child{
+    border: 0;
+}
+.league-btn span {
+    color: var(--app-less-dark);
+    padding: 0 10px;
+}
+.league-btn h4 {
+    color: var(--app-gray-font);
+    margin: 0;
+    font-size: 1.2rem;
+    padding: 0 0 0 10px;
+}
+.league-btn:active, .league-btn:active span, .league-btn:active h4 {
+    background-color: var(--app-gray);
+    color: white;
 }

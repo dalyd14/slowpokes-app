@@ -39,6 +39,17 @@ class gameClass {
             return ''
         }
     }
+    getHomeDetails() {
+        const homeDetails = {
+            teamLocation: this.homeTeam.team.location,
+            teamName: this.homeTeam.team.name,
+            teamAbr: this.homeTeam.team.abbreviation,
+            teamId: this.homeTeam.team.id,
+            logo: this.homeTeam.team.logo,
+            currentRecord: this.homeTeam.records.find(param => param.type === 'total').summary
+        }
+        return homeDetails
+    }
     getHomeScore() {
         switch (this.gameDetails.status.type.name) {
             case 'STATUS_SCHEDULED':
@@ -50,17 +61,6 @@ class gameClass {
             default:
                 return this.homeTeam.score
         }
-    }
-    getHomeDetails() {
-        const homeDetails = {
-            teamLocation: this.homeTeam.team.location,
-            teamName: this.homeTeam.team.name,
-            teamAbr: this.homeTeam.team.abbreviation,
-            teamId: this.homeTeam.team.id,
-            logo: this.homeTeam.team.logo,
-            currentRecord: this.homeTeam.records.find(param => param.type === 'total').summary
-        }
-        return homeDetails
     }
     getAwayDetails() {
         const awayDetails = {
@@ -74,7 +74,16 @@ class gameClass {
         return awayDetails
     }
     getAwayScore() {
-        return this.awayTeam.score
+        switch (this.gameDetails.status.type.name) {
+            case 'STATUS_SCHEDULED':
+                return ''
+            case 'STATUS_POSTPONED':
+                return ''
+            case 'STATUS_CANCELED':
+                return ''
+            default:
+                return this.awayTeam.score
+        }
     }
     getHomeLogo() {
         return this.homeTeam.team.logo
@@ -85,6 +94,10 @@ class gameClass {
                 return moment(this.getDateTime(), 'MMMM Do YYYY, h:mm a').format('M/DD')
             case 'STATUS_IN_PROGRESS':
                 return this.gameDetails.status.type.shortDetail.split(' - ')[1] + " qtr"
+            case 'STATUS_HALFTIME':
+                return 'HALF'
+            case 'STATUS_END_PERIOD':
+                return this.gameDetails.status.type.shortDetail
             case 'STATUS_FINAL':
                 return 'FINAL'
             case 'STATUS_POSTPONED':
@@ -109,6 +122,9 @@ class gameClass {
         return this.dateTime
     }
     getNetwork() {
-        return this.gameDetails.geoBroadcasts[0].media.shortName
+        if(this.gameDetails.geoBroadcasts.some(broadcast => broadcast.market.type === "National")) {
+            return this.gameDetails.geoBroadcasts.find(broadcast => broadcast.market.type === "National").media.shortName
+        }
+        return ''
     }
 }

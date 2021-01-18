@@ -40,7 +40,14 @@ const filterForScores = (scores) => {
         STATUS_CANCELED: []
     }
     Object.keys(games).forEach(key => {
-        games[key] = scores.filter(game => game.status.type.name === key)
+        if(key === "STATUS_IN_PROGRESS") {
+            games[key] = scores.filter(
+                game => game.status.type.name === key || 
+                game.status.type.name === 'STATUS_HALFTIME' ||
+                game.status.type.name === 'STATUS_END_PERIOD')
+        } else {
+            games[key] = scores.filter(game => game.status.type.name === key)
+        }
     })
     return games
 }

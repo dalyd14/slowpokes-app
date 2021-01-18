@@ -118,6 +118,7 @@ const getStatus = (id) => {
         case 'STATUS_SCHEDULED':
             return 'Upcoming'
         case 'STATUS_IN_PROGRESS':
+        case 'STATUS_HALFTIME':
             return 'Going on now'
         case 'STATUS_FINAL':
             return 'Completed'
@@ -136,9 +137,11 @@ const displayGameLogic = (league) => {
     var orderKeyArr = ['STATUS_IN_PROGRESS', 'STATUS_SCHEDULED', 'STATUS_FINAL', 'STATUS_POSTPONED', 'STATUS_CANCELED']
     orderKeyArr.forEach(key => {
         if(league.scores[key].length>0 && key!=='STATUS_CANCELED') {
-            addSubtitle(getStatus(key))
+            if (gameCount < 5 || isLeaguePage) {
+                addSubtitle(getStatus(key))                
+            }
             league.scores[key].forEach(game => {
-                if (gameCount <= 5 || isLeaguePage) {
+                if (gameCount < 5 || isLeaguePage) {
                     displayGame(game)
                     gameCount++    
                 } else {
@@ -168,7 +171,20 @@ const displayResults = (results) => {
             })
         }
     } else if(results.some(entry => entry.sport === 'basketball')) {
-        console.log('we got a basketball here')
+        if(results.some(entry => entry.league === 'nba')){
+            addSectionUpper('nba')
+            results.filter(result => result.league === 'nba').forEach(league => {
+                var isMore = displayGameLogic(league)
+                addLower(isMore, 'nba')
+            })
+        }
+        if(results.some(entry => entry.league === 'ncaab')) {
+            addSectionUpper('ncaab')
+            results.filter(result => result.league === 'ncaab').forEach(league => {
+                var isMore = displayGameLogic(league)
+                addLower(isMore, 'ncaab')
+            })
+        }
     }
     $('#score-results').html(pageHtml)
 }

@@ -4,8 +4,10 @@ if(window.location.href.indexOf("/scores") > -1) {
     pathLoc = 'all'
     if(window.location.href.indexOf("/football") > -1) {
         pathLoc = 'football'
-    }else if(window.location.href.indexOf("/basketball") > -1) {
+    } else if(window.location.href.indexOf("/basketball") > -1) {
         pathLoc = 'basketball'
+    } else if(window.location.href.indexOf("/favorites") > -1) {
+        pathLoc = 'favorites'
     } else if(window.location.href.indexOf("/nfl") > -1) {
         pathLoc = 'nfl'
     } else if (window.location.href.indexOf("/ncaaf") > -1) {
@@ -18,8 +20,10 @@ if(window.location.href.indexOf("/scores") > -1) {
 }
 
 var queryStrings = {
-    nfl: 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=900 ',
-    ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900 '
+    nfl: 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=900',
+    ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900',
+    nba: 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?limit=900',
+    ncaab: 'http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
 }
 
 const callPromise = queryArr => {
@@ -38,18 +42,7 @@ switch (pathLoc) {
     case 'basketball':
         callPromise(['nba', 'ncaab'])
         break;
-    case 'nfl':
-        callPromise('nfl')
-        break;
-    case 'ncaaf':
-        callPromise('ncaaf')
-        break;
-    case 'nba':
-
-        break;
-    case 'ncaab':
-
-        break;
     default:
+        callPromise(pathLoc)
         break;
 }
