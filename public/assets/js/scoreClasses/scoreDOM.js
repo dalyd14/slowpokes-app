@@ -57,7 +57,7 @@ const displayGame = (game) => {
     const thisGame = new gameClass(
         game.competitions[0].competitors[0],
         game.competitions[0].competitors[1],
-        game.competitions[0].status,
+        game.competitions[0],
         game.dateTime
     )
     pageHtml += `
@@ -66,37 +66,37 @@ const displayGame = (game) => {
             <div class="col-10">
                 <div class="row no-gutters team-info-row">
                     <div class="col-2 img-container">
-                        <img class="score-team-img" src="${thisGame.getAwayLogo()}">
+                        <img class="score-team-img" src="${thisGame.getAwayDetails().logo}">
                     </div>
                     <div class="col-8 team-name-container">
-                        <h5 class="team-name">${thisGame.getAwayDetails().teamName}</h5>
+                        <h5 class="team-name ${thisGame.getIfAwayLoss()}">${thisGame.getAwayDetails().teamName}</h5>
                     </div>
                     <div class="col-2 team-score-container">
-                        <h5 class="score">${thisGame.getAwayScore()}</h5>
+                        <h5 class="score ${thisGame.getIfAwayLoss()}">${thisGame.getAwayScore()}</h5>
                     </div>
                 </div>
                 <div class="row no-gutters team-info-row">
                     <div class="col-2 img-container">
-                        <img class="score-team-img" src="${thisGame.getHomeLogo()}">
+                        <img class="score-team-img" src="${thisGame.getHomeDetails().logo}">
                     </div>
                     <div class="col-8 team-name-container">
-                        <h5 class="team-name">${thisGame.getHomeAwayDetails().teamName}</h5>
+                        <h5 class="team-name ${thisGame.getIfHomeLoss()}">${thisGame.getHomeDetails().teamName}</h5>
                     </div>
                     <div class="col-2 team-score-container">
-                        <h5 class="score">${thisGame.getHomeScore()}</h5>
+                        <h5 class="score ${thisGame.getIfHomeLoss()}">${thisGame.getHomeScore()}</h5>
                     </div>
                 </div>
             </div>
             <div class="col-2 d-flex justify-content-center game-info-row">
                 <div class="row no-gutters">
                     <div class="col-12 quarter-container">
-                        <h5 class="quarter">3rd Qtr</h5>
+                        <h5 class="quarter">${thisGame.getQuarterOrDate()}</h5>
                     </div>
                     <div class="col-12 time-container">
-                        <h5 class="time">4:24</h5>
+                        <h5 class="time">${thisGame.getTimeLeftOrTime()}</h5>
                     </div>
                     <div class="col-12 network-container">
-                        <h6 class="network">CBS</h6>
+                        <h6 class="network">${thisGame.getNetwork()}</h6>
                     </div>
                 </div>
             </div>
@@ -115,81 +115,37 @@ const addLower = (isMore, league) => {
 
 const getStatus = (id) => {
     switch (id) {
-        case '1':
+        case 'STATUS_SCHEDULED':
             return 'Upcoming'
-        case '2':
+        case 'STATUS_IN_PROGRESS':
             return 'Going on now'
-        case '3':
+        case 'STATUS_FINAL':
             return 'Completed'
-        case '4':
+        case 'STATUS_POSTPONED':
             return 'Postponed'
-        case '5':
+        case 'STATUS_CANCELED':
             return 'Canceled'
         default:
             break;
     }
 }
 
-const displayGameLogic = (obj) => {
+const displayGameLogic = (league) => {
     var gameCount = 0
     var thereIsMore = false
-    var orderKeyArr = ['2', '1', '3', '4', '5']
+    var orderKeyArr = ['STATUS_IN_PROGRESS', 'STATUS_SCHEDULED', 'STATUS_FINAL', 'STATUS_POSTPONED', 'STATUS_CANCELED']
     orderKeyArr.forEach(key => {
-            if(key === '1' && obj.scores[key].length>0) {
-                addSubtitle(getStatus(key))
-                obj.scores[key].forEach(game => {
-                    if (gameCount <= 5 || isLeaguePage) {
-                        displayGame(game)
-                        gameCount++    
-                    } else {
-                        thereIsMore = true
-                    }
-                })
-            }
-            if(key === '2' && obj.scores[key].length>0) {
-                addSubtitle(getStatus(key))
-                obj.scores[key].forEach(game => {
-                    if (gameCount <= 5 || isLeaguePage) {
-                        displayGame(game)
-                        gameCount++    
-                    } else {
-                        thereIsMore = true
-                    }
-                })
-            }
-            if(key === '3' && obj.scores[key].length>0) {
-                addSubtitle(getStatus(key))
-                obj.scores[key].forEach(game => {
-                    if (gameCount <= 5 || isLeaguePage) {
-                        displayGame(game)
-                        gameCount++    
-                    } else {
-                        thereIsMore = true
-                    }
-                })
-            }
-            if(key === '4' && obj.scores[key].length>0) {
-                addSubtitle(getStatus(key))
-                obj.scores[key].forEach(game => {
-                    if (gameCount <= 5 || isLeaguePage) {
-                        displayGame(game)
-                        gameCount++    
-                    } else {
-                        thereIsMore = true
-                    }
-                })
-            }
-            // if(key === '5' && obj.scores[key].length>0) {
-            //     addSubtitle(getStatus(key))
-            //     obj.scores[key].forEach(game => {
-            //     if (gameCount <= 5 || isLeaguePage) {
-            //         displayGame(game)
-            //         gameCount++    
-            //     } else {
-            //         thereIsMore = true
-            //     }
-            //     })
-            // }            
+        if(league.scores[key].length>0 && key!=='STATUS_CANCELED') {
+            addSubtitle(getStatus(key))
+            league.scores[key].forEach(game => {
+                if (gameCount <= 5 || isLeaguePage) {
+                    displayGame(game)
+                    gameCount++    
+                } else {
+                    thereIsMore = true
+                }
+            })            
+        }         
     })
     return thereIsMore
 }
@@ -199,15 +155,15 @@ const displayResults = (results) => {
     if(results.some(entry => entry.sport === 'football')) {
         if(results.some(entry => entry.league === 'nfl')){
             addSectionUpper('nfl')
-            results.filter(result => result.league === 'nfl').forEach(obj => {
-                var isMore = displayGameLogic(obj)
+            results.filter(result => result.league === 'nfl').forEach(league => {
+                var isMore = displayGameLogic(league)
                 addLower(isMore, 'nfl')
             })
         }
         if(results.some(entry => entry.league === 'ncaaf')) {
             addSectionUpper('ncaaf')
-            results.filter(result => result.league === 'ncaaf').forEach(obj => {
-                var isMore = displayGameLogic(obj)
+            results.filter(result => result.league === 'ncaaf').forEach(league => {
+                var isMore = displayGameLogic(league)
                 addLower(isMore, 'ncaaf')
             })
         }

@@ -17,8 +17,39 @@ class gameClass {
         this.gameDetails = gameDetails;
         this.dateTime = dateTime;        
     }
+    getIfHomeLoss () {
+        if(this.gameDetails.status.type.name === "STATUS_FINAL") {
+            if (parseInt(this.getHomeScore()) >= parseInt(this.getAwayScore())) {
+                return ''
+            } else {
+                return 'lost'
+            }
+        } else {
+            return ''
+        }
+    }
+    getIfAwayLoss () {
+        if(this.gameDetails.status.type.name === "STATUS_FINAL") {
+            if (parseInt(this.getAwayScore()) >= parseInt(this.getHomeScore())) {
+                return ''
+            } else {
+                return 'lost'
+            }
+        } else {
+            return ''
+        }
+    }
     getHomeScore() {
-        return this.homeTeam.score
+        switch (this.gameDetails.status.type.name) {
+            case 'STATUS_SCHEDULED':
+                return ''
+            case 'STATUS_POSTPONED':
+                return ''
+            case 'STATUS_CANCELED':
+                return ''
+            default:
+                return this.homeTeam.score
+        }
     }
     getHomeDetails() {
         const homeDetails = {
@@ -43,31 +74,41 @@ class gameClass {
         return awayDetails
     }
     getAwayScore() {
-        return this.homeTeam.score
+        return this.awayTeam.score
     }
     getHomeLogo() {
         return this.homeTeam.team.logo
     }
-    getQuarterStatus() {
-        switch (parseInt(this.gameDetails.status.type.id)) {
-            case 1:
-                return 'SCHED'
-            case 2:
-                return this.gameDetails.status.type.shortDetail.split(' - ')[1]
-            case 3:
+    getQuarterOrDate() {
+        switch (this.gameDetails.status.type.name) {
+            case 'STATUS_SCHEDULED':
+                return moment(this.getDateTime(), 'MMMM Do YYYY, h:mm a').format('M/DD')
+            case 'STATUS_IN_PROGRESS':
+                return this.gameDetails.status.type.shortDetail.split(' - ')[1] + " qtr"
+            case 'STATUS_FINAL':
                 return 'FINAL'
-            case 4:
+            case 'STATUS_POSTPONED':
                 return 'POST'
-            case 5:
+            case 'STATUS_CANCELED':
                 return 'CANC'
             default:
                 break;
-        }        
+        }     
     }
-    getTimeLeft() {
-        return this.gameDetails.status.displayClock
+    getTimeLeftOrTime() {
+        switch (this.gameDetails.status.type.name) {
+            case 'STATUS_SCHEDULED':
+                return moment( this.getDateTime(), 'MMMM Do YYYY, h:mm a').format('h:mm a')
+            case 'STATUS_IN_PROGRESS':
+                return this.gameDetails.status.displayClock
+            default:
+                return '';
+        }      
     }
     getDateTime() {
         return this.dateTime
+    }
+    getNetwork() {
+        return this.gameDetails.geoBroadcasts[0].media.shortName
     }
 }

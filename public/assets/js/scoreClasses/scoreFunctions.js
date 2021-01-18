@@ -27,20 +27,20 @@ const typeScores = (sport, games) => {
 }
 
 const filterForScores = (scores) => {
-    //status schedule = 1
-    //status inProgress = 2
-    //status final = 3
-    //status postponed = 4
-    //status canceled = 5
+    //status schedule = STATUS_SCHEDULED
+    //status inProgress = STATUS_IN_PROGRESS
+    //status final = STATUS_FINAL
+    //status postponed = STATUS_POSTPONED
+    //status canceled = STATUS_CANCELED
     let games = {
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: []
+        STATUS_SCHEDULED: [],
+        STATUS_IN_PROGRESS: [],
+        STATUS_FINAL: [],
+        STATUS_POSTPONED: [],
+        STATUS_CANCELED: []
     }
     Object.keys(games).forEach(key => {
-        games[key] = scores.filter(game => game.status.type.id[0] === key.toString()[0])
+        games[key] = scores.filter(game => game.status.type.name === key)
     })
     return games
 }
