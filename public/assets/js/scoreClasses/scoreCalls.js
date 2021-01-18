@@ -20,10 +20,10 @@ if(window.location.href.indexOf("/scores") > -1) {
 }
 
 var queryStrings = {
-    nfl: 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=900',
-    ncaaf: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900',
-    nba: 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?limit=900',
-    ncaab: 'http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
+    nfl: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=900',
+    ncaaf: 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=900',
+    nba: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?limit=900',
+    ncaab: 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
 }
 
 const callPromise = queryArr => {
