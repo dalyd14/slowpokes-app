@@ -10,18 +10,26 @@
     --app-orange: #F68E4F;
 }
 
+.section-title {
+    background-color: var(--app-blue);
+}
 .section-title h3 {
     padding: 10px;
-    background-color: var(--app-blue);
     color: white;
 }
 .section-subtitle h5 {
-    padding: 3px 15px;
+    padding: 10px 15px 3px 15px;
     color: var(--app-gray);
 }
 .badge-pill {
     background-color: var(--app-green);
     color: white;
+    padding: .75em 1em;
+
+    font-size: .8rem;
+}
+.leagues-btns {
+    margin-top: 30px;
 }
 
 /* Scores Section */
@@ -39,8 +47,11 @@
     width: 35px;
 }
 .score-row {
-    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
     padding: 3px;
+}
+.section-subtitle + .section-game .score-row {
+    border-top: 0;
 }
 .score-row>div {
     padding: 0;

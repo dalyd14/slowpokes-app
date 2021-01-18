@@ -35,7 +35,7 @@ var pageHtml = ``
 const addSectionUpper = (title) => {
     pageHtml += `
     <section id="${title}">
-        <a class="section-title" href="/scores/${title}">
+        <a class="section-title d-flex align-items-center" href="/scores/${title}">
             <h3>${title.toUpperCase()}</h3>
         </a>`
 
@@ -46,10 +46,6 @@ const addSubtitle = (description) => {
         <div class="section-subtitle">
             <h5>${description}</h5>
         </div>`
-}
-
-const displaySectionSubSubtitle = () => {
-    
 }
 
 const displayGame = (game) => {
