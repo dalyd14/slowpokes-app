@@ -1,18 +1,21 @@
-const populateFootballFilter = (query, league) => {
-    callCustom(query).then(res => {
-        var results = getFootballOptions(res)
-        $('#scheduleSelector #yearSelect').html(results.yearHtml)   
-        $('#scheduleSelector #weekSelect').html(results.weekHtml)
-        $('#scheduleSelector').data('league', league)
+var globalCurrentYear
+var globalDisplayedYear
+var globalDisplayedWeek
+
+const populateFootballFilter = (query) => {
+    return new Promise((res, rej) => {
+        callCustom(query).then(result => {
+            var results = getFootballOptions(result)
+            res(results)
+        })        
     })
 }
 
 const getFootballOptions = (currentScores) => {
-    console.log(currentScores)
-    var curYearValue = currentScores.season.year
-    var curSeasonType = currentScores.season.type
-    var curWeek = currentScores.week.number
-    var curWeekValue = curSeasonType + ':' + curWeek
+    globalDisplayedYear = currentScores.season.year
+    globalDisplayedWeek = currentScores.season.type + ':' + currentScores.week.number    
+    globalCurrentYear = currentScores.season.year
+    
     weekOptions = []
     yearOptions = []
     currentScores.leagues[0].calendar.forEach(seasonType => {
@@ -27,17 +30,18 @@ const getFootballOptions = (currentScores) => {
             })
         }
     })
-    for(var i=curYearValue; i>=curYearValue-15; i--) {
+    for(var i=globalCurrentYear; i>=globalCurrentYear-15; i--) {
         yearOptions.push(i)
     }
-    return makeOptionHtmls(weekOptions, yearOptions, curWeekValue, curYearValue)
+    return makeOptionHtmls(weekOptions, yearOptions)
 }
 
-const makeOptionHtmls = (weekOptions, yearOptions, curWeek, curYear) => {
+const makeOptionHtmls = (weekOptions, yearOptions) => {
     var yearHtml = ``
     var weekHtml = ``
+
     yearOptions.forEach(year => {
-        if(year === curYear) {
+        if(year === globalDisplayedYear) {
             yearHtml += `
             <option selected value="${year}">${year}</option>`            
         } else {
@@ -46,7 +50,7 @@ const makeOptionHtmls = (weekOptions, yearOptions, curWeek, curYear) => {
         }
     })
     weekOptions.forEach(week => {
-        if(week.value === curWeek) {
+        if(week.value === globalDisplayedWeek) {
             weekHtml += `
             <option selected value="${week.value}">${week.display}</option>`            
         } else {
@@ -57,11 +61,14 @@ const makeOptionHtmls = (weekOptions, yearOptions, curWeek, curYear) => {
     return { yearHtml, weekHtml }
 }
 
+
 $('#filters').on('change', '#scheduleSelector', function() {
     var filterYear = $(this).find('#yearSelect').val()
+    globalDisplayedYear = parseInt(filterYear)
     var filterSeasonType = $(this).find('#weekSelect').val().split(":")[0]
     var filterWeek = $(this).find('#weekSelect').val().split(":")[1]
+    globalDisplayedWeek = $(this).find('#weekSelect').val()
     var league = $(this).data('league')
     var customQuery = queryStrings[league] + `&dates=${filterYear}&seasontype=${filterSeasonType}&week=${filterWeek}`
-    callPromise({[league]: customQuery})
+    callPromise({[league]: customQuery}, true)
 })

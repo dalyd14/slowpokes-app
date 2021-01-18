@@ -26,7 +26,7 @@ h1, h2, h3, h4, h5, h6, p, a {
 i.icon {
     color: white;
 }
-.toolbar-btn, .toolbar-display-btn, .sport-btn {
+.toolbar-btn, .toolbar-display-btn, .sport-btn, .league-btn {
     cursor: pointer;
 }
 nav {

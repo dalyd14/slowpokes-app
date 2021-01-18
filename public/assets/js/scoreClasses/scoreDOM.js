@@ -53,19 +53,21 @@ const whatPage = () => {
 
 var currentPage = whatPage()
 
-var pageHtml = ``
+var scoresHtml = ``
 var searchHtml = ``
 
-const addFootballFilter = () => {
+const addFootballFilter = (yearOptions, weekOptions) => {
     searchHtml += `
     <form id="scheduleSelector" data-league="${currentPage.whatLeague}" class="d-flex justify-content-between">
         <div class="scheduleChanger d-flex">
             <div class="form-group">
                 <select class="form-control" id="yearSelect">
+                    ${yearOptions}
                 </select>
             </div>
             <div class="form-group">
                 <select class="form-control" id="weekSelect">
+                    ${weekOptions}
                 </select>
             </div>
         </div>
@@ -81,7 +83,7 @@ const addFootballFilter = () => {
 }
 
 const addSectionUpper = (title) => {
-    pageHtml += `
+    scoresHtml += `
     <section id="${title}">
         <a class="section-title d-flex align-items-center" href="/scores/${title}">
             <h3>${title.toUpperCase()}</h3>
@@ -90,21 +92,20 @@ const addSectionUpper = (title) => {
 }
 
 const addSubtitle = (description) => {
-    pageHtml += `
+    scoresHtml += `
         <div class="section-subtitle">
             <h5>${description}</h5>
         </div>`
 }
 
 const displayGame = (game) => {
-    console.log(game)
     const thisGame = new gameClass(
         game.competitions[0].competitors[0],
         game.competitions[0].competitors[1],
         game.competitions[0],
         game.dateTime
     )
-    pageHtml += `
+    scoresHtml += `
     <div class="section-game">
         <div class="row score-row">
             <div class="col-10">
@@ -150,12 +151,12 @@ const displayGame = (game) => {
 
 const addLower = (isMore, league) => {
     if(isMore) {
-        pageHtml += `
+        scoresHtml += `
         <div class="showMoreGamesBtn d-flex justify-content-center align-items-center my-2">
             <a class="badge badge-pill" href="/scores/${league}"><i class="plus icon"></i> Show more ${league.toUpperCase()} games</a>
         </div>`
     }
-    pageHtml += `
+    scoresHtml += `
     </section>`
 }
 
@@ -199,22 +200,22 @@ const displayGameLogic = (league) => {
     return thereIsMore
 }
 
-const displayResults = (results) => {
-    pageHtml = ``
-    searchHtml = ``
-    console.log(results)
-    if(currentPage.isLeaguePage) {
-        if(currentPage.whatSport === 'football') {
-            addFootballFilter()
-            if(currentPage.whatLeague === 'nfl') {
-                populateFootballFilter(queryStrings.nfl, currentPage.whatLeague)
-            } else if (currentPage.whatLeague === 'ncaaf') {
-                populateFootballFilter(queryStrings.ncaaf, currentPage.whatLeague)
-            }
-        } else if (currentPage.whatSport === 'basketball') {
+const displayResults = (results, isFilteredCall=false) => {
+    scoresHtml = ``
+    if (!isFilteredCall) {
+        searchHtml = ``
+        if(currentPage.isLeaguePage) {
+            if(currentPage.whatSport === 'football') {
+                populateFootballFilter(queryStrings[currentPage.whatLeague], isFilteredCall).then(options => {
+                    addFootballFilter(options.yearHtml, options.weekHtml)
+                    $('#filters').html(searchHtml)
+                })
+            } else if (currentPage.whatSport === 'basketball') {
 
+            }
         }
     }
+
     if(results.some(entry => entry.sport === 'football')) {
         if(results.some(entry => entry.league === 'nfl')){
             addSectionUpper('nfl')
@@ -247,6 +248,5 @@ const displayResults = (results) => {
             })
         }
     }
-    $('#filters').html(searchHtml)
-    $('#score-results').html(pageHtml)
+    $('#score-results').html(scoresHtml)
 }

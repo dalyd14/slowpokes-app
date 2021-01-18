@@ -26,9 +26,9 @@ var queryStrings = {
     ncaab: 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
 }
 
-const callPromise = queryObj => {
+const callPromise = (queryObj, isFilteredCall = false) => {
     Promise.all(getScores(queryObj)).then(values => {
-        displayResults(values)
+        displayResults(values, isFilteredCall)
     })
 }
 
