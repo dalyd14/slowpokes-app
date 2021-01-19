@@ -35,7 +35,6 @@ var queryTeamStrings = {
 
 const callPromise = (queryObj, isFilteredCall = false) => {
     Promise.all(getScores(queryObj)).then(values => {
-        console.log(values)
         displayResults(values, isFilteredCall)
     })
 }

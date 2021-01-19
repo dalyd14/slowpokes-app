@@ -11,12 +11,11 @@ function scoreObj(sport, league, scores) {
 }
 
 class gameClass {
-    constructor(homeTeam, awayTeam, gameDetails, dateTime, league) {
+    constructor(homeTeam, awayTeam, gameDetails, dateTime) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.gameDetails = gameDetails;
         this.dateTime = dateTime;
-        this.league = league
     }
     getIfHomeLoss () {
         if(this.gameDetails.status.type.name === "STATUS_FINAL") {
@@ -41,14 +40,18 @@ class gameClass {
         }
     }
     getHomeDetails() {
-        var logoLeague = this.league.includes('ncaa') ? 'ncaa' : this.league
-
+        var logoUrl = "./assets/images/snail.png"
+        if ('logo' in this.homeTeam.team) {
+            logoUrl = this.homeTeam.team.logo
+        } else if ('logos' in this.homeTeam.team) {
+            logoUrl = this.homeTeam.team.logos[0].href
+        }
         const homeDetails = {
             teamLocation: this.homeTeam.team.location,
             teamName: this.homeTeam.team.name || this.homeTeam.team.shortDisplayName,
             teamAbr: this.homeTeam.team.abbreviation,
             teamId: this.homeTeam.team.id,
-            logo: 'https://a.espncdn.com/i/teamlogos/' + logoLeague + '/500/' + this.homeTeam.team.id + '.png',
+            logo: logoUrl,
             // currentRecord: this.homeTeam.records.find(param => param.type === 'total').summary
         }
         return homeDetails
@@ -71,13 +74,18 @@ class gameClass {
         }
     }
     getAwayDetails() {
-        var logoLeague = this.league.includes('ncaa') ? 'ncaa' : this.league
+        var logoUrl = "./assets/images/snail.png"
+        if ('logo' in this.awayTeam.team) {
+            logoUrl = this.awayTeam.team.logo
+        } else if ('logos' in this.awayTeam.team) {
+            logoUrl = this.awayTeam.team.logos[0].href
+        }
         const awayDetails = {
             teamLocation: this.awayTeam.team.location,
             teamName: this.awayTeam.team.name || this.awayTeam.team.shortDisplayName,
             teamAbr: this.awayTeam.team.abbreviation,
             teamId: this.awayTeam.team.id,
-            logo: 'https://a.espncdn.com/i/teamlogos/' + logoLeague + '/500/' + this.awayTeam.team.id + '.png',
+            logo: logoUrl,
             // currentRecord: this.awayTeam.records.find(param => param.type === 'total').summary 
         }
         return awayDetails

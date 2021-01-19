@@ -103,7 +103,6 @@ const makeOptionHtmls = (weekOptions, yearOptions) => {
 
 $('#filters').on('change', '#scheduleSelector', function() {
     var filterYear = $(this).find('#yearSelect').val()
-    console.log(filterYear)
     globalDisplayedYear = parseInt(filterYear)
     var league = $(this).data('league')
 

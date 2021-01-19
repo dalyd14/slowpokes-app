@@ -125,8 +125,7 @@ const displayGame = (game) => {
         game.competitions[0].competitors[0],
         game.competitions[0].competitors[1],
         game.competitions[0],
-        game.dateTime,
-        currentPage.whatLeague
+        game.dateTime
     )
     scoresHtml += `
     <div class="section-game">
@@ -205,7 +204,6 @@ const displayGameLogic = (league) => {
     var gameCount = 0
     var thereIsMore = false
     var orderKeyArr = ['STATUS_IN_PROGRESS', 'STATUS_SCHEDULED', 'STATUS_FINAL', 'STATUS_POSTPONED', 'STATUS_CANCELED']
-    console.log(league)
     orderKeyArr.forEach(key => {
         if(league.scores[key].length>0 && key!=='STATUS_CANCELED') {
             if (gameCount < 5 || currentPage.isLeaguePage) {
