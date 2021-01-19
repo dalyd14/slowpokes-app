@@ -11,11 +11,12 @@ function scoreObj(sport, league, scores) {
 }
 
 class gameClass {
-    constructor(homeTeam, awayTeam, gameDetails, dateTime) {
+    constructor(homeTeam, awayTeam, gameDetails, dateTime, league) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.gameDetails = gameDetails;
-        this.dateTime = dateTime;        
+        this.dateTime = dateTime;
+        this.league = league
     }
     getIfHomeLoss () {
         if(this.gameDetails.status.type.name === "STATUS_FINAL") {
@@ -40,13 +41,15 @@ class gameClass {
         }
     }
     getHomeDetails() {
+        var logoLeague = this.league.includes('ncaa') ? 'ncaa' : this.league
+
         const homeDetails = {
             teamLocation: this.homeTeam.team.location,
-            teamName: this.homeTeam.team.name,
+            teamName: this.homeTeam.team.name || this.homeTeam.team.shortDisplayName,
             teamAbr: this.homeTeam.team.abbreviation,
             teamId: this.homeTeam.team.id,
-            logo: this.homeTeam.team.logo,
-            currentRecord: this.homeTeam.records.find(param => param.type === 'total').summary
+            logo: 'https://a.espncdn.com/i/teamlogos/' + logoLeague + '/500/' + this.homeTeam.team.id + '.png',
+            // currentRecord: this.homeTeam.records.find(param => param.type === 'total').summary
         }
         return homeDetails
     }
@@ -59,17 +62,23 @@ class gameClass {
             case 'STATUS_CANCELED':
                 return ''
             default:
-                return this.homeTeam.score
+                if('score' in this.homeTeam) {
+                    return this.homeTeam.score.displayValue || this.homeTeam.score
+                } else {
+                    return ''
+                }
+                
         }
     }
     getAwayDetails() {
+        var logoLeague = this.league.includes('ncaa') ? 'ncaa' : this.league
         const awayDetails = {
             teamLocation: this.awayTeam.team.location,
-            teamName: this.awayTeam.team.name,
+            teamName: this.awayTeam.team.name || this.awayTeam.team.shortDisplayName,
             teamAbr: this.awayTeam.team.abbreviation,
             teamId: this.awayTeam.team.id,
-            logo: this.awayTeam.team.logo,
-            currentRecord: this.awayTeam.records.find(param => param.type === 'total').summary
+            logo: 'https://a.espncdn.com/i/teamlogos/' + logoLeague + '/500/' + this.awayTeam.team.id + '.png',
+            // currentRecord: this.awayTeam.records.find(param => param.type === 'total').summary 
         }
         return awayDetails
     }
@@ -82,7 +91,12 @@ class gameClass {
             case 'STATUS_CANCELED':
                 return ''
             default:
-                return this.awayTeam.score
+                if('score' in this.awayTeam) {
+                    return this.awayTeam.score.displayValue || this.awayTeam.score
+                } else {
+                    return ''
+                }
+                
         }
     }
     getHomeLogo() {
@@ -122,8 +136,8 @@ class gameClass {
         return this.dateTime
     }
     getNetwork() {
-        if(this.gameDetails.geoBroadcasts.some(broadcast => broadcast.market.type === "National")) {
-            return this.gameDetails.geoBroadcasts.find(broadcast => broadcast.market.type === "National").media.shortName
+        if(this.gameDetails.broadcasts.some(broadcast => broadcast.market.type === "National")) {
+            return this.gameDetails.broadcasts.find(broadcast => broadcast.market.type === "National").media.shortName
         }
         return ''
     }

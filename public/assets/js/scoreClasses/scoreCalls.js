@@ -26,8 +26,16 @@ var queryStrings = {
     ncaab: 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?limit=900'
 }
 
+var queryTeamStrings = {
+    nfl: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams?limit=900',
+    ncaaf: 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=80&limit=900',
+    nba: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams?limit=900',
+    ncaab: 'https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams?limit=900&groups=50'
+}
+
 const callPromise = (queryObj, isFilteredCall = false) => {
     Promise.all(getScores(queryObj)).then(values => {
+        console.log(values)
         displayResults(values, isFilteredCall)
     })
 }

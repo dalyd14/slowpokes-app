@@ -56,7 +56,7 @@ var currentPage = whatPage()
 var scoresHtml = ``
 var searchHtml = ``
 
-const addFootballFilter = (yearOptions, weekOptions) => {
+const addFootballFilter = (yearOptions, weekOptions, teamOptions) => {
     searchHtml += `
     <form id="scheduleSelector" data-league="${currentPage.whatLeague}" class="d-flex justify-content-between">
         <div class="scheduleChanger d-flex">
@@ -75,6 +75,29 @@ const addFootballFilter = (yearOptions, weekOptions) => {
             <div class="form-group">
                 <select class="form-control" id="teamSelect">
                     <option selected value="all">All</option>
+                    ${teamOptions}
+                </select>
+            </div>
+        </div>
+    </form>
+    `
+}
+
+const addBasketballFilter = (yearOptions, teamOptions) => {
+    searchHtml += `
+    <form id="scheduleSelector" data-league="${currentPage.whatLeague}" class="d-flex justify-content-between">
+        <div class="scheduleChanger d-flex">
+            <div class="form-group">
+                <select class="form-control" id="yearSelect">
+                    ${yearOptions}
+                </select>
+            </div>
+        </div>
+        </div class="teamFilter">
+            <div class="form-group">
+                <select class="form-control" id="teamSelect">
+                    <option selected value="all">All</option>
+                    ${teamOptions}
                 </select>
             </div>
         </div>
@@ -88,7 +111,6 @@ const addSectionUpper = (title) => {
         <a class="section-title d-flex align-items-center" href="/scores/${title}">
             <h3>${title.toUpperCase()}</h3>
         </a>`
-
 }
 
 const addSubtitle = (description) => {
@@ -103,7 +125,8 @@ const displayGame = (game) => {
         game.competitions[0].competitors[0],
         game.competitions[0].competitors[1],
         game.competitions[0],
-        game.dateTime
+        game.dateTime,
+        currentPage.whatLeague
     )
     scoresHtml += `
     <div class="section-game">
@@ -182,6 +205,7 @@ const displayGameLogic = (league) => {
     var gameCount = 0
     var thereIsMore = false
     var orderKeyArr = ['STATUS_IN_PROGRESS', 'STATUS_SCHEDULED', 'STATUS_FINAL', 'STATUS_POSTPONED', 'STATUS_CANCELED']
+    console.log(league)
     orderKeyArr.forEach(key => {
         if(league.scores[key].length>0 && key!=='STATUS_CANCELED') {
             if (gameCount < 5 || currentPage.isLeaguePage) {
@@ -206,12 +230,20 @@ const displayResults = (results, isFilteredCall=false) => {
         searchHtml = ``
         if(currentPage.isLeaguePage) {
             if(currentPage.whatSport === 'football') {
-                populateFootballFilter(queryStrings[currentPage.whatLeague], isFilteredCall).then(options => {
-                    addFootballFilter(options.yearHtml, options.weekHtml)
+                Promise.all(populateFilters(queryStrings[currentPage.whatLeague], queryTeamStrings[currentPage.whatLeague], true)).then(options => {
+                    addFootballFilter(
+                        options.find(el => 'options' in el).options.yearHtml, 
+                        options.find(el => 'options' in el).options.weekHtml, 
+                        options.find(el => 'teams' in el).teams)
                     $('#filters').html(searchHtml)
                 })
             } else if (currentPage.whatSport === 'basketball') {
-
+                Promise.all(populateFilters(queryStrings[currentPage.whatLeague], queryTeamStrings[currentPage.whatLeague], false)).then(options => {
+                    addBasketballFilter(
+                        options.find(el => 'options' in el).options.yearHtml, 
+                        options.find(el => 'teams' in el).teams)
+                    $('#filters').html(searchHtml)
+                })
             }
         }
     }

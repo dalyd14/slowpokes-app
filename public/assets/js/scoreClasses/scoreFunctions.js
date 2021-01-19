@@ -42,11 +42,11 @@ const filterForScores = (scores) => {
     Object.keys(games).forEach(key => {
         if(key === "STATUS_IN_PROGRESS") {
             games[key] = scores.filter(
-                game => game.status.type.name === key || 
-                game.status.type.name === 'STATUS_HALFTIME' ||
-                game.status.type.name === 'STATUS_END_PERIOD')
+                game => game.competitions[0].status.type.name === key || 
+                game.competitions[0].status.type.name === 'STATUS_HALFTIME' ||
+                game.competitions[0].status.type.name === 'STATUS_END_PERIOD')
         } else {
-            games[key] = scores.filter(game => game.status.type.name === key)
+            games[key] = scores.filter(game => game.competitions[0].status.type.name === key)
         }
     })
     return games
@@ -64,6 +64,13 @@ const sortScore = (scores, sortType = 'oldFirst') => {
         }
     })
     return scores
+}
+
+const sortTeams = (teams) => {
+    // sorts alphabetically A -> Z
+    // must have an array of teams
+    var sortedTeams = teams.sort((a, b) => a.team.location.localeCompare(b.team.location))
+    return sortedTeams
 }
 
 const prepareScores = (league, scores) => {

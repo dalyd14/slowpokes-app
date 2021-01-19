@@ -2,13 +2,52 @@ var globalCurrentYear
 var globalDisplayedYear
 var globalDisplayedWeek
 
-const populateFootballFilter = (query) => {
+const populateFilters = (queryCurrentScores, queryTeams, isFootball) => {
+    if (isFootball) {
+        return [populateFootballFilter(queryCurrentScores), getTeamOptions(queryTeams)]
+    } else {
+        return [populateBasketballFilter(queryCurrentScores), getTeamOptions(queryTeams)]
+    }
+}
+
+const populateFootballFilter = queryScore => {
     return new Promise((res, rej) => {
-        callCustom(query).then(result => {
-            var results = getFootballOptions(result)
-            res(results)
+        callCustom(queryScore).then(result => {
+            var options = getFootballOptions(result)
+            res({options})
         })        
     })
+}
+
+const populateBasketballFilter = queryScore => {
+    return new Promise((res, rej) => {
+        years = `
+        <option selected value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>`
+        res({options : {yearHtml: years}})   
+    })
+}
+
+const getTeamOptions = queryTeams => {
+    return new Promise((res, rej) => {
+        callCustom(queryTeams).then(result => {
+            var teams = makeTeamHtml(result.sports[0].leagues[0].teams)
+            res({teams})
+        })
+    })
+}
+
+const makeTeamHtml = teamsArr => {
+    var sortedTeams = sortTeams(teamsArr)
+    var teamOptionsHtml = ``
+    sortedTeams.forEach(team => {
+        teamOptionsHtml += `
+        <option value="${team.team.id}:${team.team.slug}">${team.team.displayName}</option>`
+    })
+    return teamOptionsHtml
 }
 
 const getFootballOptions = (currentScores) => {
@@ -64,11 +103,30 @@ const makeOptionHtmls = (weekOptions, yearOptions) => {
 
 $('#filters').on('change', '#scheduleSelector', function() {
     var filterYear = $(this).find('#yearSelect').val()
+    console.log(filterYear)
     globalDisplayedYear = parseInt(filterYear)
-    var filterSeasonType = $(this).find('#weekSelect').val().split(":")[0]
-    var filterWeek = $(this).find('#weekSelect').val().split(":")[1]
-    globalDisplayedWeek = $(this).find('#weekSelect').val()
     var league = $(this).data('league')
-    var customQuery = queryStrings[league] + `&dates=${filterYear}&seasontype=${filterSeasonType}&week=${filterWeek}`
-    callPromise({[league]: customQuery}, true)
+
+    if (league === 'nfl' || league === 'ncaaf') {
+        var filterSeasonType = $(this).find('#weekSelect').val().split(":")[0]
+        var filterWeek = $(this).find('#weekSelect').val().split(":")[1]
+        globalDisplayedWeek = $(this).find('#weekSelect').val()
+    } else if (league === 'nba' || league === 'ncaab') {
+
+    }
+    var team = $(this).find('#teamSelect').val()
+    if (team==='all') {
+        if($("#weekSelect").closest(".form-group").hasClass("d-none")){
+            $("#weekSelect").closest(".form-group").removeClass("d-none");
+        }
+        var customQuery = queryStrings[league] + `&dates=${filterYear}&seasontype=${filterSeasonType}&week=${filterWeek}`
+        callPromise({[league]: customQuery}, true)        
+    } else {
+        if(!$("#weekSelect").closest(".form-group").hasClass("d-none")){
+            $("#weekSelect").closest(".form-group").addClass("d-none");
+        }
+        var customQuery = queryTeamStrings[league].split('?')[0] + `/${team.split(':')[0]}/schedule?season=${filterYear}&seasontype=2`
+        callPromise({[league]: customQuery}, true)    
+    }
+
 })
