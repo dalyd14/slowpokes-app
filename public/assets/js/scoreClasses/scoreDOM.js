@@ -245,7 +245,6 @@ const displayResults = (results, isFilteredCall=false) => {
             }
         }
     }
-
     if(results.some(entry => entry.sport === 'football')) {
         if(results.some(entry => entry.league === 'nfl')){
             addSectionUpper('nfl')

@@ -59,7 +59,7 @@ switch (pathLoc) {
         callPromise({nfl: queryStrings.nfl, ncaaf: queryStrings.ncaaf})
         break;
     case 'basketball':
-        callPromise({nfl: queryStrings.nba, ncaaf: queryStrings.ncaab})
+        callPromise({nba: queryStrings.nba, ncaab: queryStrings.ncaab})
         break;
     default:
         callPromise({[pathLoc]: queryStrings[pathLoc]})
